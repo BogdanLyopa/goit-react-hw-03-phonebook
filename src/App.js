@@ -11,6 +11,7 @@ class App extends Component {
     contacts: [],
     filter: '',
   };
+
   handleAddContact = contact => {
     const newContact = {
       id: uuidv4(),
@@ -48,6 +49,19 @@ class App extends Component {
       contact.name.toLowerCase().includes(filter.toLowerCase()),
     );
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const visibleContacts = this.getVisibleContacts();
